@@ -16,20 +16,40 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+        try {
+            return patientRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving patients: " + e.getMessage());
+        }
     }
 
     public Optional<Patient> getPatientById(Long id) {
-        return patientRepository.findById(id);
+        try {
+            return patientRepository.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving patient with ID: " + id + ". " + e.getMessage());
+        }
     }
 
     @Transactional
     public Patient savePatient(Patient patient) {
-        return patientRepository.save(patient);
+        try {
+            return patientRepository.save(patient);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving patient: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void deletePatient(Long id) {
-        patientRepository.deleteById(id);
+        try {
+            if (patientRepository.existsById(id)) {
+                patientRepository.deleteById(id);
+            } else {
+                throw new RuntimeException("Patient with ID: " + id + " not found.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting patient with ID: " + id + ". " + e.getMessage());
+        }
     }
 }

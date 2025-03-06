@@ -5,40 +5,40 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
-@Table(name = "patient")
+@Table(name = "patient") // Defines the table name in the database.
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments the ID value.
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100) // Ensures 'name' is required and limited to 100 characters.
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // Ensures 'age' is required.
     private int age;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 200) // Ensures 'disease' is required and limited to 200 characters.
     private String disease;
 
-    @ManyToOne
-    @JoinColumn(name = "sede_id", nullable = false)
+    @ManyToOne // Many Patients belong to one Sede.
+    @JoinColumn(name = "sede_id", nullable = false) // Foreign key referencing Sede.
     private Sede sede;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id")
+    @ManyToOne // Many Patients can be assigned to one Room.
+    @JoinColumn(name = "room_id") // Foreign key referencing Room.
     private Room room;
 
-    @ManyToMany
+    @ManyToMany // Many Patients can be treated by many Doctors.
     @JoinTable(
-        name = "patient_doctor",
-        joinColumns = @JoinColumn(name = "patient_id"),
-        inverseJoinColumns = @JoinColumn(name = "doctor_id")
+        name = "patient_doctor", // Defines the join table name.
+        joinColumns = @JoinColumn(name = "patient_id"), // Foreign key for Patient.
+        inverseJoinColumns = @JoinColumn(name = "doctor_id") // Foreign key for Doctor.
     )
-    @JsonIgnore
+    @JsonIgnore // Prevents infinite recursion in JSON serialization.
     private List<Doctor> doctors;
 
-    // Getters y Setters
+    // Getters and setters for entity fields.
     public Long getId() {
         return id;
     }

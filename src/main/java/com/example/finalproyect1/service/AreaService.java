@@ -16,20 +16,40 @@ public class AreaService {
     private AreaRepository areaRepository;
 
     public List<Area> getAllAreas() {
-        return areaRepository.findAll();
+        try {
+            return areaRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving areas: " + e.getMessage());
+        }
     }
 
     public Optional<Area> getAreaById(Long id) {
-        return areaRepository.findById(id);
+        try {
+            return areaRepository.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving area with ID: " + id + ". " + e.getMessage());
+        }
     }
 
     @Transactional
     public Area saveArea(Area area) {
-        return areaRepository.save(area);
+        try {
+            return areaRepository.save(area);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving area: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void deleteArea(Long id) {
-        areaRepository.deleteById(id);
+        try {
+            if (areaRepository.existsById(id)) {
+                areaRepository.deleteById(id);
+            } else {
+                throw new RuntimeException("Area with ID: " + id + " not found.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting area with ID: " + id + ". " + e.getMessage());
+        }
     }
 }

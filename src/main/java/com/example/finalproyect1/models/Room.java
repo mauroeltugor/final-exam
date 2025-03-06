@@ -4,27 +4,27 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "room")
+@Table(name = "room") // Defines the table name in the database.
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments the ID value.
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // Ensures 'number' is required.
     private int number;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50) // Ensures 'type' is required and limited to 50 characters.
     private String type; 
 
-    @ManyToOne
-    @JoinColumn(name = "sede_id", nullable = false)
+    @ManyToOne // Many Rooms belong to one Sede.
+    @JoinColumn(name = "sede_id", nullable = false) // Foreign key referencing Sede.
     private Sede sede;
 
-    @OneToMany(mappedBy = "room") 
+    @OneToMany(mappedBy = "room") // One Room can have multiple Patients.
     private List<Patient> patients;
 
-    // Getters y Setters
+    // Getters and setters for entity fields.
     public Long getId() {
         return id;
     }

@@ -5,29 +5,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
-@Table(name = "areas")
+@Table(name = "areas") // Defines the table name in the database.
 public class Area {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments the ID value.
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100) // Ensures 'name' is required and limited to 100 characters.
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "sede_id", nullable = false)
+    @ManyToOne // Many Areas belong to one Sede.
+    @JoinColumn(name = "sede_id", nullable = false) // Foreign key referencing Sede.
     private Sede sede;
 
-    @ManyToMany
+    @ManyToMany // Many Areas can have many Doctors.
     @JoinTable(
-        name = "areas_doctors",
-        joinColumns = @JoinColumn(name = "area_id"),
-        inverseJoinColumns = @JoinColumn(name = "doctor_id")
+        name = "areas_doctors", // Defines the join table name.
+        joinColumns = @JoinColumn(name = "area_id"), // Foreign key for Area.
+        inverseJoinColumns = @JoinColumn(name = "doctor_id") // Foreign key for Doctor.
     )
-    @JsonIgnore
+    @JsonIgnore // Prevents infinite recursion in JSON serialization.
     private List<Doctor> doctors;
 
+    // Getters and setters for entity fields.
     public Long getId() {
         return id;
     }
@@ -59,6 +60,4 @@ public class Area {
     public void setDoctors(List<Doctor> doctors) {
         this.doctors = doctors;
     }
-
-    
 }

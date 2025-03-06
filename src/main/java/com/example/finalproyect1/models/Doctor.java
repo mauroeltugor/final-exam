@@ -5,36 +5,37 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
-@Table(name = "doctors")
+@Table(name = "doctors") // Defines the table name in the database.
 public class Doctor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments the ID value.
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100) // Ensures 'name' is required and limited to 100 characters.
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100) // Ensures 'specialty' is required and limited to 100 characters.
     private String specialty;
 
-    @ManyToOne
-    @JoinColumn(name = "sede_id", nullable = false)
+    @ManyToOne // Many Doctors belong to one Sede.
+    @JoinColumn(name = "sede_id", nullable = false) // Foreign key referencing Sede.
     private Sede sede;
 
-    @ManyToMany(mappedBy = "doctors")
-    @JsonIgnore
+    @ManyToMany(mappedBy = "doctors") // Bidirectional relationship with Area.
+    @JsonIgnore // Prevents infinite recursion in JSON serialization.
     private List<Area> areas;
 
-    @ManyToMany
+    @ManyToMany // Many Doctors can have many Patients.
     @JoinTable(
-        name = "doctor_patients",
-        joinColumns = @JoinColumn(name = "doctor_id"),
-        inverseJoinColumns = @JoinColumn(name = "patient_id")
+        name = "doctor_patients", // Defines the join table name.
+        joinColumns = @JoinColumn(name = "doctor_id"), // Foreign key for Doctor.
+        inverseJoinColumns = @JoinColumn(name = "patient_id") // Foreign key for Patient.
     )
-    @JsonIgnore
+    @JsonIgnore // Prevents infinite recursion in JSON serialization.
     private List<Patient> patients;
 
+    // Getters and setters for entity fields.
     public Long getId() {
         return id;
     }
@@ -82,6 +83,4 @@ public class Doctor {
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
     }
-
-   
 }

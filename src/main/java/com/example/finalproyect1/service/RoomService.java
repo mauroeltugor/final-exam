@@ -16,20 +16,40 @@ public class RoomService {
     private RoomRepository roomRepository;
 
     public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+        try {
+            return roomRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving rooms: " + e.getMessage());
+        }
     }
 
     public Optional<Room> getRoomById(Long id) {
-        return roomRepository.findById(id);
+        try {
+            return roomRepository.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving room with ID: " + id + ". " + e.getMessage());
+        }
     }
 
     @Transactional
     public Room saveRoom(Room room) {
-        return roomRepository.save(room);
+        try {
+            return roomRepository.save(room);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving room: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void deleteRoom(Long id) {
-        roomRepository.deleteById(id);
+        try {
+            if (roomRepository.existsById(id)) {
+                roomRepository.deleteById(id);
+            } else {
+                throw new RuntimeException("Room with ID: " + id + " not found.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting room with ID: " + id + ". " + e.getMessage());
+        }
     }
 }
